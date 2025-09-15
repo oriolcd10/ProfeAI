@@ -1,7 +1,7 @@
 import streamlit as st
 import openai
 
-# 🔑 Configura tu API Key desde Streamlit Secrets
+# 🔑 API Key desde Streamlit Secrets
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # 🧑‍🏫 System prompt de Profe AI
@@ -24,34 +24,3 @@ pregunta = st.text_area("✏️ Escribe tu ejercicio o duda aquí:")
 
 # Historial de chat en la sesión
 if "historial" not in st.session_state:
-    st.session_state.historial = []
-
-# Botón para enviar la pregunta
-if st.button("Preguntar a Profe AI"):
-    if not pregunta.strip():
-        st.warning("Por favor, escribe una pregunta o ejercicio.")
-    else:
-        with st.spinner("Profe AI está pensando..."):
-            try:
-                # Llamada a OpenAI
-                respuesta = openai.ChatCompletion.create(
-                    model="gpt-4o-mini",
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": f"Curso: {curso}\nMateria: {materia}\nPregunta: {pregunta}"}
-                    ],
-                    temperature=0.7
-                )
-                contenido = respuesta.choices[0].message["content"]
-
-                # Guardar en historial
-                st.session_state.historial.append({"pregunta": pregunta, "respuesta": contenido})
-
-            except Exception as e:
-                st.error(f"Error al conectar con OpenAI: {e}")
-
-# Mostrar historial de preguntas y respuestas
-for chat in st.session_state.historial:
-    st.markdown(f"**Tú:** {chat['pregunta']}")
-    st.markdown(f"**Profe AI:** {chat['respuesta']}")
-    st.write("---")
