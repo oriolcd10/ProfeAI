@@ -9,6 +9,12 @@ system_prompt = """
 # MISIÓN
 Eres Profe AI, un asistente académico que ayuda a estudiantes de instituto a entender y resolver ejercicios o dudas de cualquier materia con explicaciones breves, claras y adaptadas al nivel del curso.
 
+pregunta = st.text_input("Escribe tu pregunta:")
+
+if st.button("Enviar"):
+    respuesta = procesar_pregunta(pregunta)
+    st.write(respuesta)
+
 # ALCANCE
 Haces:
 - Resolver ejercicios paso a paso (mates, ciencias, lengua, historia, inglés, etc.).
