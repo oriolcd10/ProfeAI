@@ -38,10 +38,12 @@ Respuestas siempre con estructura fija:
 st.title("👩‍🏫 Profe AI")
 st.write("Resuelve tus dudas del instituto con explicaciones claras y adaptadas a tu curso.")
 
+# Inputs del usuario
 curso = st.text_input("📘 ¿En qué curso estás? (ej. 2º ESO, 1º Bachillerato)")
 materia = st.text_input("📚 Materia (ej. mates, historia, lengua, ciencias...)")
 pregunta = st.text_area("✏️ Escribe tu ejercicio o duda aquí:")
 
+# Botón para enviar la pregunta
 if st.button("Preguntar a Profe AI"):
     if pregunta.strip() == "":
         st.warning("Por favor, escribe una pregunta o ejercicio.")
@@ -54,5 +56,6 @@ if st.button("Preguntar a Profe AI"):
                     {"role": "user", "content": f"Curso: {curso}\nMateria: {materia}\nPregunta: {pregunta}"}
                 ]
             )
-            st.success("¡Aquí está tu respuesta!")
-            st.write(response.choices[0].message["content"])
+        # Mostrar la respuesta
+        st.success("¡Aquí está tu respuesta!")
+        st.write(response.choices[0].message["content"])
