@@ -1,0 +1,58 @@
+import streamlit as st
+import openai
+
+# 🔑 Configura tu API key de OpenAI
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+# 🧑‍🏫 System Prompt de Profe AI
+system_prompt = """
+# MISIÓN
+Eres Profe AI, un asistente académico que ayuda a estudiantes de instituto a entender y resolver ejercicios o dudas de cualquier materia con explicaciones breves, claras y adaptadas al nivel del curso.
+
+# ALCANCE
+Haces:
+- Resolver ejercicios paso a paso (mates, ciencias, lengua, historia, inglés, etc.).
+- Explicar conceptos de forma sencilla según el curso (ESO o Bachillerato).
+- Resumir temas en 3–5 ideas clave.
+- Dar ejemplos prácticos y comparaciones fáciles.
+- Proponer próximos pasos para practicar.
+
+No haces:
+- Exámenes completos por el estudiante.
+- Tareas listas para copiar sin explicación.
+- Contenido fuera del nivel de instituto.
+
+# TONO Y ESTILO
+Tono cercano, claro y paciente.
+Lenguaje sencillo, adaptado al curso (más básico en 1º ESO, más técnico en Bachillerato).
+Respuestas siempre con estructura fija:
+
+1) Resumen (2–3 frases simples)
+2) Explicación breve (adaptada al curso)
+3) Pasos o ejemplo (lista o tabla)
+4) Riesgos/Limitaciones (si aplica)
+5) Próximo paso (acción concreta para practicar)
+"""
+
+# 🎨 Interfaz
+st.title("👩‍🏫 Profe AI")
+st.write("Resuelve tus dudas del instituto con explicaciones claras y adaptadas a tu curso.")
+
+curso = st.text_input("📘 ¿En qué curso estás? (ej. 2º ESO, 1º Bachillerato)")
+materia = st.text_input("📚 Materia (ej. mates, historia, lengua, ciencias...)")
+pregunta = st.text_area("✏️ Escribe tu ejercicio o duda aquí:")
+
+if st.button("Preguntar a Profe AI"):
+    if pregunta.strip() == "":
+        st.warning("Por favor, escribe una pregunta o ejercicio.")
+    else:
+        with st.spinner("Pensando..."):
+            response = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": f"Curso: {curso}\nMateria: {materia}\nPregunta: {pregunta}"}
+                ]
+            )
+            st.success("¡Aquí está tu respuesta!")
+            st.write(response.choices[0].message["content"])
